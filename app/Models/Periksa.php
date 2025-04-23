@@ -27,7 +27,9 @@ class Periksa extends Model
         'id_pasien',
         'id_dokter',
         'tgl_periksa',
-        'catatan',
+        'keluhan',
+        'catatan_dokter',
+        'status',
         'biaya_periksa',
     ];
 
