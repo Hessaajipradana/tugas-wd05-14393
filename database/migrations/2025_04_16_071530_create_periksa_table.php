@@ -17,6 +17,9 @@ return new class extends Migration
             $table->foreignId('id_dokter')->constrained('users');
             $table->datetime('tgl_periksa');
             $table->text('catatan');
+            // $table->text('catatan_dokter');
+            // $table->text('keluhan');
+            // $table->enum('status', ['pending', 'done', 'cancelled'])->default('pending');
             $table->integer('biaya_periksa');
             $table->timestamps();
         });

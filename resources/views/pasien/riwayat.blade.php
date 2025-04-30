@@ -27,64 +27,13 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-12">
-        <div class="card">
-          <div class="card-header">
-            <h3 class="card-title">Daftar Riwayat Periksa</h3>
-          </div>
-          <!-- /.card-header -->
-          <div class="card-body">
-            <table id="riwayatTable" class="table table-bordered table-striped">
-              <thead>
-                <tr>
-                  <th>No</th>
-                  <th>ID Periksa</th>
-                  <th>Tanggal Periksa</th>
-                  <th>Dokter</th>
-                  <th>Catatan Dokter</th>
-                  <th>Obat</th>
-                  <th>Biaya Periksa</th>
-                  <th>Detail</th>
-                </tr>
-              </thead>
-              <tbody>
-                @if(isset($riwayats) && count($riwayats) > 0)
-                  @foreach($riwayats as $key => $riwayat)
-                  <tr>
-                    <td>{{ $key + 1 }}</td>
-                    <td>{{ $riwayat->id }}</td>
-                    <td>{{ \Carbon\Carbon::parse($riwayat->tgl_periksa)->format('d M Y H:i') }}</td>
-                    <td>{{ $riwayat->dokter->nama }}</td>
-                    <td>{{ $riwayat->catatan_dokter }}</td>
-                    <td>
-                      @if(count($riwayat->obat) > 0)
-                        <ul class="pl-3 mb-0">
-                          @foreach($riwayat->obat as $obat)
-                            <li>{{ $obat->nama_obat }} ({{ $obat->kemasan }})</li>
-                          @endforeach
-                        </ul>
-                      @else
-                        <span class="text-muted">-</span>
-                      @endif
-                    </td>
-                    <td>Rp {{ number_format($riwayat->biaya_periksa, 0, ',', '.') }}</td>
-                    <td>
-                      <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modal-detail-{{ $riwayat->id }}">
-                        <i class="fas fa-eye"></i> Detail
-                      </button>
-                    </td>
-                  </tr>
-                  @endforeach
-                @else
-                  <tr>
-                    <td colspan="8" class="text-center">Belum ada riwayat pemeriksaan.</td>
-                  </tr>
-                @endif
-              </tbody>
-            </table>
-          </div>
-          <!-- /.card-body -->
-        </div>
-        <!-- /.card -->
+        @include('tables.table', [
+    'title' => 'Daftar Riwayat Periksa',
+    'tableId' => 'riwayatTable',
+    'tableClass' => 'table-bordered table-striped',
+    'thead' => view('tables.partial.pasien.riwayat-thead'),
+    'tbody' => view('tables.partial.pasien.riwayat-tbody', ['riwayats' => $riwayats])
+])
       </div>
       <!-- /.col -->
     </div>

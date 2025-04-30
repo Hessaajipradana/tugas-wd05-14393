@@ -1,577 +1,417 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Poliklinik Sehat - Pelayanan Kesehatan Terpercaya</title>
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <title>Poliklinikikuk</title>
   <style>
-    :root {
-      --primary-color: #2d8cf0;
-      --secondary-color: #5ebd3e;
-      --dark-color: #333;
-      --light-color: #f9f9f9;
-    }
-    
-    body {
-      font-family: 'Poppins', sans-serif;
-      line-height: 1.6;
-      color: var(--dark-color);
-    }
-    
-    .navbar {
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      padding: 15px 0;
-      background-color: white;
-    }
-    
-    .navbar-brand {
-      font-weight: 700;
-      font-size: 24px;
-      color: var(--primary-color);
-    }
-    
-    .navbar-brand span {
-      color: var(--secondary-color);
-    }
-    
-    .nav-link {
-      font-weight: 500;
-      margin: 0 10px;
-      transition: all 0.3s ease;
-    }
-    
-    .btn-primary-custom {
-      background-color: var(--primary-color);
-      color: white;
-      border-radius: 50px;
-      padding: 8px 20px;
-      font-weight: 500;
-      transition: all 0.3s ease;
-      border: none;
-    }
-    
-    .btn-primary-custom:hover {
-      background-color: #2579d8;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      color: white;
-    }
-    
-    .btn-outline-custom {
-      background-color: transparent;
-      color: var(--primary-color);
-      border: 2px solid var(--primary-color);
-      border-radius: 50px;
-      padding: 8px 20px;
-      font-weight: 500;
-      transition: all 0.3s ease;
-    }
-    
-    .btn-outline-custom:hover {
-      background-color: var(--primary-color);
-      color: white;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-    
-    .hero {
-      padding: 100px 0;
-      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .hero-title {
-      font-size: 48px;
-      font-weight: 700;
-      margin-bottom: 20px;
-      color: var(--primary-color);
-    }
-    
-    .hero-subtitle {
-      font-size: 18px;
-      font-weight: 400;
-      margin-bottom: 30px;
-      color: #666;
-    }
-    
-    .hero-image {
-      max-width: 100%;
-      animation: float 4s ease-in-out infinite;
-    }
-    
-    @keyframes float {
-      0% { transform: translateY(0px); }
-      50% { transform: translateY(-20px); }
-      100% { transform: translateY(0px); }
-    }
-    
-    .feature-box {
-      background-color: white;
-      border-radius: 15px;
-      padding: 30px;
-      text-align: center;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-      transition: all 0.3s ease;
-      height: 100%;
-    }
-    
-    .feature-box:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 15px 40px rgba(0,0,0,0.1);
-    }
-    
-    .feature-icon {
-      font-size: 40px;
-      margin-bottom: 20px;
-      color: var(--primary-color);
-    }
-    
-    .section-title {
-      font-size: 36px;
-      font-weight: 700;
-      margin-bottom: 50px;
-      text-align: center;
-      color: var(--primary-color);
-    }
-    
-    .doctor-card {
-      background-color: white;
-      border-radius: 15px;
-      overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-      transition: all 0.3s ease;
-      height: 100%;
-    }
-    
-    .doctor-card:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 15px 40px rgba(0,0,0,0.1);
-    }
-    
-    .doctor-image {
-      width: 100%;
-      height: 250px;
-      object-fit: cover;
-    }
-    
-    .doctor-info {
-      padding: 20px;
-    }
-    
-    .doctor-name {
-      font-size: 22px;
-      font-weight: 600;
-      margin-bottom: 5px;
-    }
-    
-    .doctor-specialty {
-      font-size: 16px;
-      color: var(--primary-color);
-      margin-bottom: 15px;
-    }
-    
-    .testimonial-card {
-      background-color: white;
-      border-radius: 15px;
-      padding: 30px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-      transition: all 0.3s ease;
-      height: 100%;
-      position: relative;
-    }
-    
-    .testimonial-card:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 15px 40px rgba(0,0,0,0.1);
-    }
-    
-    .testimonial-card::before {
-      content: '\201C';
-      font-size: 80px;
-      position: absolute;
-      top: -10px;
-      left: 20px;
-      color: var(--primary-color);
-      opacity: 0.1;
-    }
-    
-    .footer {
-      background-color: #333;
-      color: white;
-      padding: 50px 0 20px;
-    }
-    
-    .footer-title {
-      font-size: 20px;
-      font-weight: 600;
-      margin-bottom: 20px;
-      color: white;
-    }
-    
-    .footer-links {
-      list-style: none;
+    /* Reset and base styles */
+    * {
+      margin: 0;
       padding: 0;
+      box-sizing: border-box;
     }
-    
-    .footer-links li {
-      margin-bottom: 10px;
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      min-height: 100vh;
+      width: 100%;
+      overflow-x: hidden;
+      background-color: white;
+      color: #0f172a;
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
-    
-    .footer-links a {
-      color: #ccc;
-      text-decoration: none;
+
+    body.dark {
+      background-color: #0a0a0a;
+      color: white;
+    }
+
+    /* Container styles */
+    .container {
+      position: relative;
+      min-height: 100vh;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .content {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+      text-align: center;
+    }
+
+    .inner-content {
+      max-width: 56rem;
+      margin: 0 auto;
+      opacity: 0;
+      animation: fadeIn 2s forwards;
+    }
+
+    /* Title styles */
+    .title {
+      font-size: 4rem;
+      font-weight: 700;
+      margin-bottom: 2rem;
+      letter-spacing: -0.05em;
+      line-height: 1.1;
+    }
+
+    @media (min-width: 640px) {
+      .title {
+        font-size: 5rem;
+      }
+    }
+
+    @media (min-width: 768px) {
+      .title {
+        font-size: 6rem;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .title {
+        font-size: 8rem;
+      }
+    }
+
+    .title span.word {
+      display: inline-block;
+      margin-right: 1rem;
+    }
+
+    .title span.word:last-child {
+      margin-right: 0;
+    }
+
+    .letter {
+      display: inline-block;
+      background: linear-gradient(to right, #0f172a, rgba(107, 114, 128, 0.8));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      transform: translateY(100px);
+      opacity: 0;
+    }
+
+    body.dark .letter {
+      background: linear-gradient(to right, white, rgba(255, 255, 255, 0.8));
+      -webkit-background-clip: text;
+      background-clip: text;
+    }
+
+    /* Button styles */
+    .button-container {
+      display: inline-flex;
+      gap: 1rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .button-wrapper {
+      display: inline-block;
+      position: relative;
+      background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.1));
+      padding: 1px;
+      border-radius: 1.15rem;
+      backdrop-filter: blur(8px);
+      overflow: hidden;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      transition: box-shadow 0.3s ease, transform 0.3s ease;
+    }
+
+    body.dark .button-wrapper {
+      background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.1));
+    }
+
+    .button-wrapper:hover {
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      transform: translateY(-2px);
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 1.15rem;
+      padding: 0.75rem 2rem;
+      font-size: 1.125rem;
+      font-weight: 600;
+      background-color: rgba(255, 255, 255, 0.95);
+      color: black;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(4px);
+      min-width: 140px;
+    }
+
+    body.dark .button {
+      background-color: rgba(0, 0, 0, 0.95);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .button:hover {
+      background-color: rgba(255, 255, 255, 1);
+    }
+
+    body.dark .button:hover {
+      background-color: rgba(0, 0, 0, 1);
+    }
+
+    .button span {
+      opacity: 0.9;
+      transition: opacity 0.3s ease;
+    }
+
+    .button:hover span {
+      opacity: 1;
+    }
+
+    .button .arrow {
+      margin-left: 0.75rem;
+      opacity: 0.7;
+      transform: translateX(0);
       transition: all 0.3s ease;
     }
-    
-    .footer-links a:hover {
-      color: var(--primary-color);
-      padding-left: 5px;
+
+    .button:hover .arrow {
+      opacity: 1;
+      transform: translateX(6px);
     }
-    
-    @media (max-width: 768px) {
-      .hero {
-        padding: 80px 0;
-        text-align: center;
+
+    /* SVG background styles */
+    .background {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .svg-container {
+      width: 100%;
+      height: 100%;
+      color: #0f172a;
+    }
+
+    body.dark .svg-container {
+      color: white;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes letterAnimation {
+      0% {
+        transform: translateY(100px);
+        opacity: 0;
       }
-      
-      .hero-title {
-        font-size: 36px;
+      100% {
+        transform: translateY(0);
+        opacity: 1;
       }
-      
-      .hero-subtitle {
-        font-size: 16px;
-      }
-      
-      .hero-image {
-        margin-top: 50px;
-      }
-      
-      .section-title {
-        font-size: 30px;
-      }
+    }
+
+    /* Loading animation */
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+
+    body.dark .loading-overlay {
+      background-color: #0a0a0a;
+    }
+
+    .loading-spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid rgba(0, 0, 0, 0.1);
+      border-radius: 50%;
+      border-top-color: #0f172a;
+      animation: spin 1s ease-in-out infinite;
+    }
+
+    body.dark .loading-spinner {
+      border: 5px solid rgba(255, 255, 255, 0.1);
+      border-top-color: white;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .hidden {
+      opacity: 0;
+      visibility: hidden;
     }
   </style>
 </head>
 <body>
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-light sticky-top">
-    <div class="container">
-      <a class="navbar-brand" href="#">Poli<span>klinik</span></a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="#home">Beranda</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#features">Layanan</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#doctors">Dokter</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#testimonials">Testimoni</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#contact">Kontak</a>
-          </li>
-        </ul>
-        <div class="ms-auto">
-          @if (Route::has('login'))
-            @auth
-              <a href="{{ url('/home') }}" class="btn btn-primary-custom">Dashboard</a>
-            @else
-              <a href="{{ route('login') }}" class="btn btn-primary-custom me-2">Masuk</a>
-              @if (Route::has('register'))
-                <a href="{{ route('register') }}" class="btn btn-outline-custom">Daftar</a>
-              @endif
-            @endauth
-          @endif
-        </div>
-      </div>
-    </div>
-  </nav>
+  <!-- Loading overlay -->
+  <div class="loading-overlay" id="loading-overlay">
+    <div class="loading-spinner"></div>
+  </div>
 
-  <!-- Hero Section -->
-  <section class="hero" id="home">
-    <div class="container">
-      <div class="row align-items-center">
-        <div class="col-lg-6">
-          <h1 class="hero-title">Pelayanan Kesehatan Terpercaya</h1>
-          <p class="hero-subtitle">Poliklinik Sehat hadir untuk memberikan pelayanan kesehatan terbaik dengan dokter-dokter berpengalaman dan fasilitas modern.</p>
-          <div class="d-flex gap-3">
-            @if (Route::has('login'))
-              @auth
-                <a href="{{ url('/home') }}" class="btn btn-primary-custom btn-lg">Dashboard</a>
-              @else
-                <a href="{{ route('login') }}" class="btn btn-primary-custom btn-lg">Masuk</a>
-                @if (Route::has('register'))
-                  <a href="{{ route('register') }}" class="btn btn-outline-custom btn-lg">Daftar Sekarang</a>
-                @endif
-              @endauth
-            @endif
-          </div>
-        </div>
-        <div class="col-lg-6">
-          <img src="https://img.freepik.com/free-vector/medical-healthcare-services-concept_1200-155.jpg" alt="Healthcare Illustration" class="hero-image">
-        </div>
-      </div>
-    </div>
-  </section>
+  <div class="container">
+    <div class="background" id="background1"></div>
+    <div class="background" id="background2"></div>
 
-  <!-- Features Section -->
-  <section class="py-5 my-5" id="features">
-    <div class="container">
-      <h2 class="section-title">Layanan Kami</h2>
-      <div class="row">
-        <div class="col-lg-4 col-md-6 mb-4">
-          <div class="feature-box">
-            <i class="fas fa-stethoscope feature-icon"></i>
-            <h3>Pemeriksaan Umum</h3>
-            <p>Layanan pemeriksaan kesehatan umum oleh dokter-dokter berpengalaman untuk menangani berbagai keluhan kesehatan.</p>
+    <div class="content">
+      <div class="inner-content">
+        <h1 class="title" id="title">Poliklinikikuk</h1>
+
+        <div class="button-container">
+          <div class="button-wrapper">
+            <button class="button" id="masuk-btn">
+              <span>Masuk</span>
+              <span class="arrow">→</span>
+            </button>
           </div>
-        </div>
-        <div class="col-lg-4 col-md-6 mb-4">
-          <div class="feature-box">
-            <i class="fas fa-heartbeat feature-icon"></i>
-            <h3>Pemeriksaan Khusus</h3>
-            <p>Layanan pemeriksaan spesialis untuk kondisi kesehatan tertentu dengan peralatan modern dan terkini.</p>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6 mb-4">
-          <div class="feature-box">
-            <i class="fas fa-pills feature-icon"></i>
-            <h3>Farmasi</h3>
-            <p>Layanan apotek yang menyediakan obat-obatan berkualitas dengan harga terjangkau dan konsultasi penggunaan obat.</p>
+          <div class="button-wrapper">
+            <button class="button" id="daftar-btn">
+              <span>Daftar</span>
+              <span class="arrow">→</span>
+            </button>
           </div>
         </div>
       </div>
     </div>
-  </section>
+  </div>
 
-  <!-- Doctors Section -->
-  <section class="py-5 my-5 bg-light" id="doctors">
-    <div class="container">
-      <h2 class="section-title">Dokter Kami</h2>
-      <div class="row">
-        <div class="col-lg-4 col-md-6 mb-4">
-          <div class="doctor-card">
-            <img src="https://img.freepik.com/free-photo/portrait-smiling-handsome-male-doctor-man_171337-5055.jpg" alt="Dr. Andi Pratama" class="doctor-image">
-            <div class="doctor-info">
-              <h3 class="doctor-name">Dr. Andi Pratama</h3>
-              <p class="doctor-specialty">Dokter Umum</p>
-              <p>Dokter umum berpengalaman dengan lebih dari 10 tahun praktik dalam menangani berbagai kondisi kesehatan.</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6 mb-4">
-          <div class="doctor-card">
-            <img src="https://img.freepik.com/free-photo/doctor-with-his-arms-crossed-white-background_1368-5790.jpg" alt="Dr. Budi Santoso" class="doctor-image">
-            <div class="doctor-info">
-              <h3 class="doctor-name">Dr. Budi Santoso</h3>
-              <p class="doctor-specialty">Dokter Umum</p>
-              <p>Dokter umum dengan pendekatan yang teliti dan santai, membuat pasien merasa nyaman saat konsultasi.</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6 mb-4">
-          <div class="doctor-card">
-            <img src="https://img.freepik.com/free-photo/woman-doctor-wearing-lab-coat-with-stethoscope-isolated_1303-29791.jpg" alt="Dr. Dewi Sartika" class="doctor-image">
-            <div class="doctor-info">
-              <h3 class="doctor-name">Dr. Dewi Sartika</h3>
-              <p class="doctor-specialty">Dokter Umum</p>
-              <p>Dokter dengan pendekatan yang ramah dan teliti dalam menangani pasien dari berbagai kalangan usia.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+  <script>
+    // Create static SVG paths for background
+    function createStaticPaths(containerId, position) {
+      const container = document.getElementById(containerId);
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('class', 'svg-container');
+      svg.setAttribute('viewBox', '0 0 696 316');
+      svg.setAttribute('fill', 'none');
+      
+      const title = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+      title.textContent = 'Background Paths';
+      svg.appendChild(title);
+      
+      for (let i = 0; i < 36; i++) {
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        const d = `M-${380 - i * 5 * position} -${189 + i * 6}C-${
+          380 - i * 5 * position
+        } -${189 + i * 6} -${312 - i * 5 * position} ${216 - i * 6} ${
+          152 - i * 5 * position
+        } ${343 - i * 6}C${616 - i * 5 * position} ${470 - i * 6} ${
+          684 - i * 5 * position
+        } ${875 - i * 6} ${684 - i * 5 * position} ${875 - i * 6}`;
+        
+        path.setAttribute('d', d);
+        path.setAttribute('stroke', 'currentColor');
+        path.setAttribute('stroke-width', (0.5 + i * 0.03).toString());
+        path.setAttribute('stroke-opacity', (0.1 + i * 0.03).toString());
+        
+        svg.appendChild(path);
+      }
+      
+      container.appendChild(svg);
+    }
 
-  <!-- Testimonials Section -->
-  <section class="py-5 my-5" id="testimonials">
-    <div class="container">
-      <h2 class="section-title">Testimoni Pasien</h2>
-      <div class="row">
-        <div class="col-lg-4 col-md-6 mb-4">
-          <div class="testimonial-card">
-            <p>"Pelayanan di Poliklinik Sehat sangat baik dan profesional. Dokternya ramah dan menjelaskan kondisi saya dengan detail. Saya merasa lebih tenang setelah berobat di sini."</p>
-            <div class="d-flex align-items-center mt-3">
-              <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Ahmad Fadli" class="rounded-circle me-3" width="50">
-              <div>
-                <h5 class="mb-0">Ahmad Fadli</h5>
-                <small class="text-muted">Pasien</small>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6 mb-4">
-          <div class="testimonial-card">
-            <p>"Fasilitas di Poliklinik Sehat sangat lengkap dan modern. Prosedur pendaftaran juga mudah dan tidak membutuhkan waktu lama. Dokternya sangat kompeten."</p>
-            <div class="d-flex align-items-center mt-3">
-              <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Siti Aminah" class="rounded-circle me-3" width="50">
-              <div>
-                <h5 class="mb-0">Siti Aminah</h5>
-                <small class="text-muted">Pasien</small>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6 mb-4">
-          <div class="testimonial-card">
-            <p>"Anak saya selalu merasa nyaman setiap kali berobat di Poliklinik Sehat. Dokter anaknya sangat sabar dan pintar membuat anak-anak tidak takut untuk diperiksa."</p>
-            <div class="d-flex align-items-center mt-3">
-              <img src="https://randomuser.me/api/portraits/men/62.jpg" alt="Budi Rahardjo" class="rounded-circle me-3" width="50">
-              <div>
-                <h5 class="mb-0">Budi Rahardjo</h5>
-                <small class="text-muted">Orang Tua Pasien</small>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+    // Create animated title
+    function animateTitle() {
+      const titleElement = document.getElementById('title');
+      const text = titleElement.textContent;
+      titleElement.textContent = '';
+      
+      const words = text.split(' ');
+      
+      words.forEach((word, wordIndex) => {
+        const wordSpan = document.createElement('span');
+        wordSpan.classList.add('word');
+        
+        Array.from(word).forEach((letter, letterIndex) => {
+          const letterSpan = document.createElement('span');
+          letterSpan.classList.add('letter');
+          letterSpan.textContent = letter;
+          
+          // Set animation delay based on word and letter index
+          const delay = wordIndex * 0.1 + letterIndex * 0.03;
+          letterSpan.style.animation = `letterAnimation 0.5s forwards ease-out`;
+          letterSpan.style.animationDelay = `${delay + 0.5}s`; // Add 0.5s for initial loading
+          
+          wordSpan.appendChild(letterSpan);
+        });
+        
+        titleElement.appendChild(wordSpan);
+      });
+    }
 
-  <!-- Contact Section -->
-  <section class="py-5 my-5 bg-light" id="contact">
-    <div class="container">
-      <h2 class="section-title">Hubungi Kami</h2>
-      <div class="row">
-        <div class="col-lg-6 mb-4">
-          <div class="bg-white p-4 rounded shadow-sm">
-            <h4 class="mb-4">Informasi Kontak</h4>
-            <div class="d-flex mb-3">
-              <div class="me-3">
-                <i class="fas fa-map-marker-alt text-primary fa-2x"></i>
-              </div>
-              <div>
-                <h5>Alamat</h5>
-                <p>Jl. Kesehatan No. 123, Jakarta Selatan</p>
-              </div>
-            </div>
-            <div class="d-flex mb-3">
-              <div class="me-3">
-                <i class="fas fa-phone-alt text-primary fa-2x"></i>
-              </div>
-              <div>
-                <h5>Telepon</h5>
-                <p>(021) 1234-5678</p>
-              </div>
-            </div>
-            <div class="d-flex mb-3">
-              <div class="me-3">
-                <i class="fas fa-envelope text-primary fa-2x"></i>
-              </div>
-              <div>
-                <h5>Email</h5>
-                <p>info@polikliniksehat.com</p>
-              </div>
-            </div>
-            <div class="d-flex">
-              <div class="me-3">
-                <i class="fas fa-clock text-primary fa-2x"></i>
-              </div>
-              <div>
-                <h5>Jam Operasional</h5>
-                <p>Senin - Sabtu: 08.00 - 20.00<br>Minggu: 09.00 - 14.00</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-6">
-          <div class="bg-white p-4 rounded shadow-sm">
-            <h4 class="mb-4">Kirim Pesan</h4>
-            <form>
-              <div class="row">
-                <div class="col-md-6 mb-3">
-                  <label for="name" class="form-label">Nama Lengkap</label>
-                  <input type="text" class="form-control" id="name" required>
-                </div>
-                <div class="col-md-6 mb-3">
-                  <label for="email" class="form-label">Email</label>
-                  <input type="email" class="form-control" id="email" required>
-                </div>
-              </div>
-              <div class="mb-3">
-                <label for="subject" class="form-label">Subjek</label>
-                <input type="text" class="form-control" id="subject" required>
-              </div>
-              <div class="mb-3">
-                <label for="message" class="form-label">Pesan</label>
-                <textarea class="form-control" id="message" rows="4" required></textarea>
-              </div>
-              <button type="submit" class="btn btn-primary-custom">Kirim Pesan</button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+    // Check for dark mode preference
+    function setupDarkMode() {
+      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+      }
+      
+      // Listen for changes in color scheme preference
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+        if (event.matches) {
+          document.body.classList.add('dark');
+        } else {
+          document.body.classList.remove('dark');
+        }
+      });
+    }
 
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-4 mb-4">
-          <h3 class="mb-3">Poli<span class="text-primary">klinik</span></h3>
-          <p>Poliklinik Sehat adalah pusat layanan kesehatan terpercaya yang menyediakan pelayanan medis berkualitas dengan dokter-dokter berpengalaman dan fasilitas modern.</p>
-          <div class="d-flex gap-3 mt-3">
-            <a href="#" class="text-white"><i class="fab fa-facebook-f"></i></a>
-            <a href="#" class="text-white"><i class="fab fa-twitter"></i></a>
-            <a href="#" class="text-white"><i class="fab fa-instagram"></i></a>
-            <a href="#" class="text-white"><i class="fab fa-linkedin-in"></i></a>
-          </div>
-        </div>
-        <div class="col-lg-2 col-md-4 mb-4">
-          <h5 class="footer-title">Layanan</h5>
-          <ul class="footer-links">
-            <li><a href="#">Pemeriksaan Umum</a></li>
-            <li><a href="#">Pemeriksaan Khusus</a></li>
-            <li><a href="#">Farmasi</a></li>
-            <li><a href="#">Unit Gawat Darurat</a></li>
-            <li><a href="#">Laboratorium</a></li>
-          </ul>
-        </div>
-        <div class="col-lg-2 col-md-4 mb-4">
-          <h5 class="footer-title">Link Cepat</h5>
-          <ul class="footer-links">
-            <li><a href="#home">Beranda</a></li>
-            <li><a href="#features">Layanan</a></li>
-            <li><a href="#doctors">Dokter</a></li>
-            <li><a href="#testimonials">Testimoni</a></li>
-            <li><a href="#contact">Kontak</a></li>
-          </ul>
-        </div>
-        <div class="col-lg-4 col-md-4 mb-4">
-          <h5 class="footer-title">Jam Praktik</h5>
-          <ul class="list-unstyled">
-            <li class="mb-2">Senin - Jumat: 08.00 - 20.00</li>
-            <li class="mb-2">Sabtu: 08.00 - 17.00</li>
-            <li>Minggu: 09.00 - 14.00</li>
-          </ul>
-          <div class="mt-4">
-            <h5 class="footer-title">Nomor Darurat</h5>
-            <h4 class="text-white">(021) 1234-5678</h4>
-          </div>
-        </div>
-      </div>
-      <div class="text-center pt-4 mt-4 border-top border-secondary">
-        <p>&copy; {{ date('Y') }} Poliklinik Sehat. All Rights Reserved.</p>
-      </div>
-    </div>
-  </footer>
+    // Button click handlers
+    function setupButtons() {
+      const masukBtn = document.getElementById('masuk-btn');
+      const daftarBtn = document.getElementById('daftar-btn');
+      
+      masukBtn.addEventListener('click', () => {
+        window.location.href = "{{ route('login') }}";
+      });
+      
+      daftarBtn.addEventListener('click', () => {
+        window.location.href = "{{ route('register') }}";
+      });
+    }
 
-  <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    // Handle loading screen
+    function handleLoading() {
+      const loadingOverlay = document.getElementById('loading-overlay');
+      
+      // Hide loading screen after everything is loaded
+      window.addEventListener('load', () => {
+        setTimeout(() => {
+          loadingOverlay.classList.add('hidden');
+        }, 800); // Give a little extra time for animations to prepare
+      });
+    }
+
+    // Initialize everything
+    document.addEventListener('DOMContentLoaded', () => {
+      setupDarkMode();
+      createStaticPaths('background1', 1);
+      createStaticPaths('background2', -1);
+      animateTitle();
+      setupButtons();
+      handleLoading();
+    });
+  </script>
 </body>
 </html>

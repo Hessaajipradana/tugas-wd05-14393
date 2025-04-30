@@ -28,68 +28,13 @@
     <!-- Daftar Pasien Yang Perlu Diperiksa -->
     <div class="row">
       <div class="col-12">
-        <div class="card">
-          <div class="card-header">
-            <h3 class="card-title">Daftar Pasien Yang Perlu Diperiksa</h3>
-            <div class="card-tools">
-              <div class="input-group input-group-sm" style="width: 150px;">
-                <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
-                <div class="input-group-append">
-                  <button type="submit" class="btn btn-default">
-                    <i class="fas fa-search"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- /.card-header -->
-          <div class="card-body table-responsive p-0">
-            <table class="table table-hover text-nowrap">
-              <thead>
-                <tr>
-                  <th>No</th>
-                  <th>ID Periksa</th>
-                  <th>Pasien</th>
-                  <th>Tanggal Periksa</th>
-                  <th>Status</th>
-                  <th>Aksi</th>
-                </tr>
-              </thead>
-              <tbody>
-                @if(isset($periksa_pasiens) && count($periksa_pasiens) > 0)
-                  @foreach($periksa_pasiens as $key => $periksa)
-                  <tr>
-                    <td>{{ $key + 1 }}</td>
-                    <td>{{ $periksa->id }}</td>
-                    <td>{{ $periksa->pasien->nama }}</td>
-                    <td>{{ \Carbon\Carbon::parse($periksa->tgl_periksa)->format('d M Y H:i') }}</td>
-                    <td>
-                      @if($periksa->catatan)
-                        <span class="badge bg-success">Selesai</span>
-                      @else
-                        <span class="badge bg-warning">Menunggu</span>
-                      @endif
-                    </td>
-                    <td>
-                      @if(!$periksa->catatan)
-                      <a href="{{ route('dokter.periksa.edit', $periksa->id) }}" class="btn btn-sm btn-primary">
-                        <i class="fas fa-stethoscope"></i> Periksa
-                      </a>
-                      @else
-                      <a href="{{ route('dokter.periksa.show', $periksa->id) }}" class="btn btn-sm btn-info">
-                        <i class="fas fa-eye"></i> Detail
-                      </a>
-                      @endif
-                    </td>
-                  </tr>
-                  @endforeach
-                @endif
-              </tbody>
-            </table>
-          </div>
-          <!-- /.card-body -->
-        </div>
-        <!-- /.card -->
+        @include('tables.table', [
+    'title' => 'Daftar Pasien Yang Perlu Diperiksa',
+    'tableId' => 'periksaTable',
+    'tableClass' => 'table-bordered table-striped',
+    'thead' => view('tables.partial.dokter.periksa-thead'),
+    'tbody' => view('tables.partial.dokter.periksa-tbody', ['periksa_pasiens' => $periksa_pasiens])
+])
       </div>
     </div>
     <!-- /.row -->
@@ -97,60 +42,13 @@
     <!-- Riwayat Pemeriksaan -->
     <div class="row">
       <div class="col-12">
-        <div class="card">
-          <div class="card-header">
-            <h3 class="card-title">Riwayat Pemeriksaan</h3>
-          </div>
-          <!-- /.card-header -->
-          <div class="card-body">
-            <table id="riwayatTable" class="table table-bordered table-striped">
-              <thead>
-                <tr>
-                  <th>No</th>
-                  <th>ID Periksa</th>
-                  <th>Pasien</th>
-                  <th>Tanggal Periksa</th>
-                  <th>Catatan Dokter</th>
-                  <th>Obat</th>
-                  <th>Biaya</th>
-                  <th>Aksi</th>
-                </tr>
-              </thead>
-              <tbody>
-                @if(isset($riwayat_periksa) && count($riwayat_periksa) > 0)
-                  @foreach($riwayat_periksa as $key => $riwayat)
-                  <tr>
-                    <td>{{ $key + 1 }}</td>
-                    <td>{{ $riwayat->id }}</td>
-                    <td>{{ $riwayat->pasien->nama }}</td>
-                    <td>{{ \Carbon\Carbon::parse($riwayat->tgl_periksa)->format('d M Y H:i') }}</td>
-                    <td>{{ $riwayat->catatan_dokter }}</td>
-                    <td>
-                      @if(count($riwayat->obat) > 0)
-                        <ul class="pl-3 mb-0">
-                          @foreach($riwayat->obat as $obat)
-                            <li>{{ $obat->nama_obat }}</li>
-                          @endforeach
-                        </ul>
-                      @else
-                        <span class="text-muted">-</span>
-                      @endif
-                    </td>
-                    <td>Rp {{ number_format($riwayat->biaya_periksa, 0, ',', '.') }}</td>
-                    <td>
-                      <a href="{{ route('dokter.periksa.show', $riwayat->id) }}" class="btn btn-sm btn-info">
-                        <i class="fas fa-eye"></i> Detail
-                      </a>
-                    </td>
-                  </tr>
-                  @endforeach
-                @endif
-              </tbody>
-            </table>
-          </div>
-          <!-- /.card-body -->
-        </div>
-        <!-- /.card -->
+          @include('tables.table', [
+    'title' => 'Riwayat Pemeriksaan',
+    'tableId' => 'riwayatTable',
+    'tableClass' => 'table-bordered table-striped',
+    'thead' => view('tables.partial.dokter.riwayat-thead'),
+    'tbody' => view('tables.partial.dokter.riwayat-tbody', ['riwayat_periksa' => $riwayat_periksa])
+])
       </div>
     </div>
     <!-- /.row -->

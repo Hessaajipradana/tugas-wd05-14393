@@ -20,7 +20,9 @@ class PeriksaSeeder extends Seeder
             'id_pasien' => 3, // Citra Dewi
             'id_dokter' => 1, // Dr. Andi Pratama
             'tgl_periksa' => Carbon::now()->subDays(5),
-            'catatan' => 'Pasien mengeluh demam dan sakit kepala. Diagnosis: Demam virus.',
+            'status' => 'done',
+            'keluhan' => 'Keluhan: Demam dan sakit kepala.',
+            'catatan_dokter' => ' Diagnosis: Demam virus.',
             'biaya_periksa' => 185000, // 150000 + 35000 (obat)
         ]);
 
@@ -40,7 +42,9 @@ class PeriksaSeeder extends Seeder
             'id_pasien' => 4, // Deni Kurniawan
             'id_dokter' => 2, // Dr. Budi Santoso
             'tgl_periksa' => Carbon::now()->subDays(3),
-            'catatan' => 'Pasien mengeluh batuk pilek dan demam ringan. Diagnosis: Infeksi saluran pernapasan atas.',
+            'status' => 'done',
+            'keluhan' => 'Keluhan: Batuk pilek dan demam ringan.',
+            'catatan_dokter' => ' Diagnosis: Infeksi saluran pernapasan atas.',
             'biaya_periksa' => 198000, // 150000 + 48000 (obat)
         ]);
 
@@ -65,7 +69,9 @@ class PeriksaSeeder extends Seeder
             'id_pasien' => 5, // Eka Putri
             'id_dokter' => 1, // Dr. Andi Pratama
             'tgl_periksa' => Carbon::now()->addHours(2),
-            'catatan' => 'Keluhan: Sakit perut bagian bawah dan mual sejak 2 hari yang lalu.',
+            'status' => 'pending',
+            'keluhan' => 'Keluhan: Sakit perut bagian bawah dan mual sejak 2 hari yang lalu.',
+            'catatan_dokter' => 'pasien di diagnosa : diare',
             'biaya_periksa' => 0, // Belum diperiksa
         ]);
 
@@ -74,7 +80,9 @@ class PeriksaSeeder extends Seeder
             'id_pasien' => 3, // Citra Dewi
             'id_dokter' => 2, // Dr. Budi Santoso
             'tgl_periksa' => Carbon::now()->addDays(1),
-            'catatan' => 'Keluhan: Nyeri sendi dan otot, terutama di pagi hari.',
+            'status' => 'pending',
+            'keluhan' => 'Keluhan: Nyeri sendi dan otot, terutama di pagi hari.',
+            'catatan_dokter' => 'pasien di diagnosa : sakit sendi',
             'biaya_periksa' => 0, // Belum diperiksa
         ]);
     }

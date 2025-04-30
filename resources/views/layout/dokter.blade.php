@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Poliklinik | @yield('title')</title>
+  <title>Poliklinikikuk | @yield('title')</title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -87,7 +87,7 @@
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
-          <img src="{{ asset('dist/img/user2-160x160.jpg') }}" class="img-circle elevation-2" alt="User Image">
+          <img src="{{ asset('dist/img/avatar4.png') }}" class="img-circle elevation-2" alt="Dokter Image">
         </div>
         <div class="info">
           <a href="#" class="d-block">Dr. {{ Auth::user()->nama }}</a>
@@ -129,7 +129,7 @@
   <!-- /.content-wrapper -->
 
   <footer class="main-footer">
-    <strong>Copyright &copy; 2025 <a href="#">Poliklinik</a>.</strong>
+    <strong>Copyright &copy; 2025 <a href="https://github.com/Hessaajipradana/tugas-wd05-14393">Poliklinikikuk@14393</a>.</strong>
     All rights reserved.
     <div class="float-right d-none d-sm-inline-block">
       <b>Version</b> 1.0.0

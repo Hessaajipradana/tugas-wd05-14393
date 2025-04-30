@@ -1,6 +1,7 @@
 {
     "private": true,
     "type": "module",
+    "author": "https://github.com/Hessaajipradana",
     "scripts": {
         "build": "vite build",
         "dev": "vite"

@@ -140,52 +140,13 @@
     
     <div class="row">
       <div class="col-12">
-        <div class="card">
-          <div class="card-header">
-            <h3 class="card-title">Daftar Periksa Yang Akan Datang</h3>
-          </div>
-          <!-- /.card-header -->
-          <div class="card-body table-responsive p-0">
-            <table class="table table-hover text-nowrap">
-              <thead>
-                <tr>
-                  <th>No</th>
-                  <th>Tanggal Periksa</th>
-                  <th>Dokter</th>
-                  <th>Status</th>
-                  <th>Aksi</th>
-                </tr>
-              </thead>
-              <tbody>
-                @if(isset($upcoming_periksa) && count($upcoming_periksa) > 0)
-                  @foreach($upcoming_periksa as $key => $periksa)
-                  <tr>
-                    <td>{{ $key + 1 }}</td>
-                    <td>{{ \Carbon\Carbon::parse($periksa->tgl_periksa)->format('d M Y H:i') }}</td>
-                    <td>{{ $periksa->dokter->nama }}</td>
-                    <td><span class="badge badge-warning">Menunggu</span></td>
-                    <td>
-                      <form action="{{ route('pasien.periksa.destroy', $periksa->id) }}" method="POST" class="d-inline">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Apakah Anda yakin ingin membatalkan pendaftaran?')">
-                          <i class="fas fa-trash"></i> Batalkan
-                        </button>
-                      </form>
-                    </td>
-                  </tr>
-                  @endforeach
-                @else
-                  <tr>
-                    <td colspan="5" class="text-center">Belum ada jadwal pemeriksaan yang akan datang.</td>
-                  </tr>
-                @endif
-              </tbody>
-            </table>
-          </div>
-          <!-- /.card-body -->
-        </div>
-        <!-- /.card -->
+        @include('tables.table', [
+    'title' => 'Daftar Periksa Yang Akan Datang',
+    'tableId' => 'upcomingPeriksaTable',
+    'tableClass' => 'table-hover text-nowrap',
+    'thead' => view('tables.partial.pasien.periksa-thead'),
+    'tbody' => view('tables.partial.pasien.periksa-tbody', ['upcoming_periksa' => $upcoming_periksa])
+])
       </div>
     </div>
   </div>

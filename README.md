@@ -1,7 +1,10 @@
-# Patient Management System (Kasap Mata)
+# 🏥 Patient Management System (Kasap Mata)
+
+**Nama:** Fatwa Reksa Aji Pradana  
+**NIM:** A11202214393
 
 ## 1. Overview
-Aplikasi manajemen klinik sederhana dengan Laravel 10 dan AdminLTE. Mendukung registrasi pasien, permintaan pemeriksaan, antrian dokter, pencatatan pemeriksaan, manajemen obat, dan riwayat.
+Halo! 👋 Saya membuat aplikasi manajemen klinik sederhana ini menggunakan kombinasi Laravel 12, MySQL, dan AdminLTE. Fitur-fiturnya meliputi registrasi pasien, permintaan pemeriksaan, antrian dokter, pencatatan pemeriksaan, manajemen obat, dan riwayat pasien. Semua dibuat dengan pendekatan MVC agar rapi dan mudah dikembangkan.
 
 ## 2. Fitur Utama
 - **Autentikasi**: login, register untuk pasien dan dokter.
@@ -64,19 +67,29 @@ routes/web.php               # route definisi untuk pasien & dokter
    - DELETE `/dokter/obat/{id}` → `DokterController@destroyObat`.
 7. **Riwayat Pasien**: GET `/pasien/riwayat` → `PasienController@riwayat` → DataTable.
 
-## 5. Dependensi & Teknologi
-- **Laravel 10.x**, **PHP 8.x**, **Composer**
-- **AdminLTE** (Bootstrap 4)
+## 5. Dependensi & Teknologi ⚙️
+- **Laravel 12.x** 🚀, **PHP 8.x**, **Composer**
+- **MySQL** 🐬
+- **AdminLTE** 🎨
 - **jQuery**, **DataTables** (responsive, buttons)
 - **AJAX & Modal**: CRUD obat tanpa reload penuh
 
-## 6. Cara Penggunaan
+## 6. Cara Penggunaan 🛠️
 1. `composer install`
 2. `php artisan migrate`
 3. `php artisan serve`
-4. Akses di `http://localhost:8000`
+4. Akses di `http://localhost:8000` 🚦
 
-## 7. User Stories / Demonstrasi
+## 7. Penjelasan Arsitektur MVC 🗂️
+
+Aplikasi ini saya bangun dengan pola **MVC (Model-View-Controller)**:
+- **Model** 🗃️: Berisi logika dan struktur data, misal model `Pasien`, `Periksa`, dan `Obat` yang berhubungan langsung dengan database MySQL.
+- **View** 👁️: Semua tampilan antarmuka (UI) saya buat dengan Blade, AdminLTE, dan DataTables agar user experience lebih nyaman dan modern.
+- **Controller** 🧑‍💻: Di sinilah saya mengatur alur data dari model ke view, serta menangani request dari user (misal login, CRUD, dll).
+
+Dengan pola MVC ini, kode jadi lebih terstruktur, mudah dipelihara, dan scalable untuk kebutuhan pengembangan ke depan.
+
+## 8. User Stories / Demonstrasi
 
 ### 7.1 Pasien
 - **Register Pasien**: Demonstrasikan pasien melakukan registrasi di `/register`.
