@@ -1,24 +1,19 @@
 <?php
-// database/migrations/0001_01_01_000000_create_users_table.php
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('nama',255);
-            $table->string('alamat', 255);
-            $table->string('no_hp', 50);
             $table->string('email', 50)->unique();
-            $table->string('role',50);
             $table->string('password');
+            $table->enum('role', ['dokter', 'pasien', 'admin']);
+            $table->unsignedBigInteger('entity_id')->nullable(); // ID dari table dokter/pasien
             $table->rememberToken();
             $table->timestamps();
         });
@@ -39,9 +34,6 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('users');
