@@ -31,11 +31,10 @@ class AdminController extends Controller
             'total_dokter' => Dokter::count(),
             'total_pasien' => Pasien::count(),
             'total_obat' => Obat::count(),
-            'total_daftar_hari_ini' => 0, // DaftarPoli::whereDate('tanggal_daftar', today())->count(),
-            'total_periksa_bulan_ini' => 0, // Periksa::whereMonth('tgl_periksa', now()->month)->count(),
+            'total_daftar_hari_ini' => 0,
+            'total_periksa_bulan_ini' => 0,
         ];
 
-        // Data untuk chart (simple version for now)
         $chartData = [
             'pendaftaran_minggu_ini' => $this->getPendaftaranMingguIni(),
             'poli_terpopuler' => [],
@@ -105,7 +104,6 @@ class AdminController extends Controller
     {
         $poli = Poli::findOrFail($id);
         
-        // Cek apakah ada dokter yang masih terkait
         if ($poli->dokter()->count() > 0) {
             return redirect()->back()
                 ->with('error', 'Tidak dapat menghapus poli karena masih ada dokter yang terkait!');
@@ -153,10 +151,10 @@ class AdminController extends Controller
         ]);
 
         // Auto create user account for dokter
-        $this->createUserForDokter($dokter);
+        $userCredentials = $this->createUserForDokter($dokter);
 
         return redirect()->route('admin.dokter.index')
-            ->with('success', 'Dokter berhasil ditambahkan!');
+            ->with('success', "Dokter berhasil ditambahkan! Email login: {$userCredentials['email']}, Password: {$userCredentials['password']}");
     }
 
     public function updateDokter(Request $request, $id)
@@ -200,7 +198,7 @@ class AdminController extends Controller
     }
 
     // ======================
-    // PASIEN MANAGEMENT
+    // PASIEN MANAGEMENT - FIXED!
     // ======================
 
     public function indexPasien()
@@ -233,8 +231,11 @@ class AdminController extends Controller
                 'no_hp' => $request->no_hp,
             ]);
 
+            // ✅ PERBAIKAN: Auto create user account for pasien
+            $userCredentials = $this->createUserForPasien($pasien);
+
             return redirect()->route('admin.pasien.index')
-                ->with('success', "Pasien berhasil ditambahkan dengan No RM: {$pasien->no_rm}!");
+                ->with('success', "Pasien berhasil ditambahkan! No RM: {$pasien->no_rm}. Email login: {$userCredentials['email']}, Password: {$userCredentials['password']}");
                 
         } catch (\Exception $e) {
             return redirect()->back()
@@ -355,21 +356,54 @@ class AdminController extends Controller
     }
 
     // ======================
-    // HELPER METHODS
+    // HELPER METHODS - ENHANCED
     // ======================
 
+    /**
+     * Create user account for dokter
+     */
     private function createUserForDokter($dokter)
     {
         $email = $this->generateEmailFromName($dokter->nama, 'dokter');
+        $password = 'password123'; // Default password
         
         User::create([
             'email' => $email,
-            'password' => Hash::make('password123'),
+            'password' => Hash::make($password),
             'role' => 'dokter',
             'entity_id' => $dokter->id,
         ]);
+
+        return [
+            'email' => $email,
+            'password' => $password
+        ];
     }
 
+    /**
+     * ✅ NEW: Create user account for pasien
+     */
+    private function createUserForPasien($pasien)
+    {
+        $email = $this->generateEmailFromName($pasien->nama, 'pasien');
+        $password = 'password123'; // Default password
+        
+        User::create([
+            'email' => $email,
+            'password' => Hash::make($password),
+            'role' => 'pasien',
+            'entity_id' => $pasien->id,
+        ]);
+
+        return [
+            'email' => $email,
+            'password' => $password
+        ];
+    }
+
+    /**
+     * Generate email from name with fallback for duplicates
+     */
     private function generateEmailFromName($nama, $role)
     {
         $cleanName = strtolower($nama);

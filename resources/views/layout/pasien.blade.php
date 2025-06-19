@@ -115,6 +115,12 @@
               <p>Riwayat Periksa</p>
             </a>
           </li>
+          <li class="nav-item">
+            <a href="{{ route('pasien.profil') }}" class="nav-link {{ Request::is('pasien/profil') ? 'active' : '' }}">
+              <i class="nav-icon fas fa-user"></i>
+              <p>Profil</p>
+            </a>
+          </li>
         </ul>
       </nav>
       <!-- /.sidebar-menu -->

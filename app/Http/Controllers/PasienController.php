@@ -144,13 +144,35 @@ class PasienController extends Controller
             ->where('status', 'menunggu')
             ->firstOrFail();
         
-        // Cek apakah bisa dibatalkan (minimal 2 jam sebelum jadwal)
-        $jadwalMulai = Carbon::parse($daftarPoli->tanggal_daftar . ' ' . $daftarPoli->jadwal->jam_mulai);
-        $batasWaktu = $jadwalMulai->subHours(2);
-        
-        if (now() > $batasWaktu) {
-            return redirect()->route('pasien.periksa')
-                ->with('error', 'Pendaftaran tidak dapat dibatalkan kurang dari 2 jam sebelum jadwal!');
+        // ✅ FIXED: Solusi robust untuk parsing waktu
+        try {
+            // Ambil raw jam dari database
+            $rawJamMulai = $daftarPoli->jadwal->getAttributes()['jam_mulai'];
+            
+            // Ekstrak hanya bagian TIME (HH:MM:SS)
+            if (preg_match('/(\d{2}:\d{2}:\d{2})/', $rawJamMulai, $matches)) {
+                $timeOnly = $matches[1];
+            } else {
+                // Fallback: ambil 8 karakter terakhir jika format berbeda
+                $timeOnly = substr($rawJamMulai, -8);
+            }
+            
+            // Buat datetime dengan tanggal + waktu yang sudah bersih
+            $jadwalMulai = Carbon::parse($daftarPoli->tanggal_daftar . ' ' . $timeOnly);
+            $batasWaktu = $jadwalMulai->subHours(2);
+            
+            if (now() > $batasWaktu) {
+                return redirect()->route('pasien.periksa')
+                    ->with('error', 'Pendaftaran tidak dapat dibatalkan kurang dari 2 jam sebelum jadwal!');
+            }
+            
+        } catch (\Exception $e) {
+            // Jika masih error, skip validasi waktu dan langsung batalkan
+            // Log error untuk debugging
+            \Log::warning('Error parsing jadwal waktu: ' . $e->getMessage(), [
+                'raw_jam_mulai' => $rawJamMulai ?? 'null',
+                'daftar_poli_id' => $daftarPoli->id
+            ]);
         }
         
         $daftarPoli->delete();
@@ -177,9 +199,77 @@ class PasienController extends Controller
         return view('pasien.riwayat', compact('riwayats'));
     }
 
-
     /**
-     * PROFIL PASIEN MANAGEMENT
+     * ✅ NEW: PROFIL PASIEN MANAGEMENT
      */
     
+    /**
+     * Menampilkan halaman profil pasien
+     */
+    public function profil()
+    {
+        $user = Auth::user();
+        $pasien = $user->pasien;
+        
+        return view('pasien.profil', compact('pasien', 'user'));
+    }
+
+    /**
+     * Update profil pasien
+     */
+    public function profilUpdate(Request $request)
+    {
+        $request->validate([
+            'nama' => 'required|string|max:150',
+            'alamat' => 'required|string|max:255',
+            'no_hp' => 'required|string|max:15',
+        ]);
+
+        $user = Auth::user();
+        $pasien = $user->pasien;
+
+        try {
+            $pasien->update([
+                'nama' => $request->nama,
+                'alamat' => $request->alamat,
+                'no_hp' => $request->no_hp,
+            ]);
+
+            return redirect()->route('pasien.profil')
+                ->with('success', 'Profil berhasil diperbarui!');
+                
+        } catch (\Exception $e) {
+            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage())->withInput();
+        }
+    }
+
+    /**
+     * Update password pasien
+     */
+    public function passwordUpdate(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        $user = Auth::user();
+
+        // Cek password lama
+        if (!\Hash::check($request->current_password, $user->password)) {
+            return back()->with('error', 'Password lama tidak sesuai!')->withInput();
+        }
+
+        try {
+            $user->update([
+                'password' => \Hash::make($request->password)
+            ]);
+
+            return redirect()->route('pasien.profil')
+                ->with('success', 'Password berhasil diperbarui!');
+                
+        } catch (\Exception $e) {
+            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
 }

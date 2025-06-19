@@ -1,4 +1,4 @@
-<!-- resources/views/dokter/jadwal.blade.php -->
+<!-- resources/views/dokter/jadwal.blade.php - ENHANCED -->
 @extends('layout.dokter')
 
 @section('title', 'Jadwal Periksa')
@@ -10,6 +10,23 @@
     <div class="row mb-2">
       <div class="col-sm-6">
         <h1 class="m-0">Jadwal Periksa Saya</h1>
+        <!-- ✅ Real-time Operational Status -->
+        <div id="operational-status" class="mt-2">
+          @if(isset($isCurrentlyOperational) && $isCurrentlyOperational)
+            @php $current = $currentOperationalSchedule; @endphp
+            <div class="alert alert-warning mb-0 py-2">
+              <i class="fas fa-clock mr-2"></i>
+              <strong>Sedang Operasional:</strong> {{ $current->hari }} 
+              {{ $current->jam_mulai->format('H:i') }}-{{ $current->jam_selesai->format('H:i') }}
+              <span class="ml-2" id="remaining-time"></span>
+            </div>
+          @else
+            <div class="alert alert-info mb-0 py-2" id="non-operational-status">
+              <i class="fas fa-check-circle mr-2"></i>
+              <strong>Status:</strong> Tidak sedang operasional
+            </div>
+          @endif
+        </div>
       </div><!-- /.col -->
       <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
@@ -103,10 +120,15 @@
         </div>
         <!-- /.card -->
 
-        <!-- Info Box -->
+        <!-- ✅ ENHANCED: Info Box dengan Real-time Clock -->
         <div class="card card-info">
           <div class="card-header">
             <h3 class="card-title">Informasi Jadwal</h3>
+            <div class="card-tools">
+              <span class="badge badge-info" id="current-time">
+                <i class="fas fa-clock"></i> <span id="live-clock">{{ \Carbon\Carbon::now('Asia/Jakarta')->format('H:i:s') }}</span>
+              </span>
+            </div>
           </div>
           <div class="card-body">
             <div class="alert alert-info">
@@ -114,10 +136,16 @@
               <ul class="mb-0 pl-3">
                 <li>Anda dapat memiliki lebih dari satu jadwal</li>
                 <li>Hanya <strong>satu jadwal</strong> yang dapat aktif dalam satu waktu</li>
-                <li>Jadwal tidak dapat diubah pada hari H</li>
-                <li>Jadwal yang sudah digunakan tidak dapat dihapus</li>
+                <li>Jadwal tidak dapat diubah saat <strong>sedang operasional</strong></li>
+                <li>Tidak bisa aktifkan jadwal lain saat masih dalam jam operasional</li>
                 <li>Pastikan tidak ada jadwal yang bentrok</li>
               </ul>
+            </div>
+
+            <!-- ✅ NEW: Operational Hours Status -->
+            <div class="alert alert-warning" id="operational-warning" style="display: none;">
+              <h6><i class="fas fa-exclamation-triangle"></i> Peringatan Operasional:</h6>
+              <p class="mb-0">Anda sedang dalam jam operasional. Tidak dapat mengaktifkan jadwal lain hingga operasional selesai.</p>
             </div>
           </div>
         </div>
@@ -127,6 +155,11 @@
         <div class="card">
           <div class="card-header">
             <h3 class="card-title">Daftar Jadwal Periksa</h3>
+            <div class="card-tools">
+              <button type="button" class="btn btn-sm btn-info" id="refresh-status">
+                <i class="fas fa-sync-alt"></i> Refresh Status
+              </button>
+            </div>
           </div>
           <div class="card-body table-responsive">
             <table class="table table-bordered table-striped" id="jadwalTable">
@@ -137,63 +170,95 @@
                   <th>Jam Mulai</th>
                   <th>Jam Selesai</th>
                   <th>Status</th>
-                  <th width="20%">Aksi</th>
+                  <th width="25%">Aksi</th>
                 </tr>
               </thead>
               <tbody>
                 @foreach($jadwals as $key => $jadwal)
-                <tr>
+                @php $status = $jadwal->getOperationalStatus(); @endphp
+                <tr data-jadwal-id="{{ $jadwal->id }}">
                   <td>{{ $key + 1 }}</td>
                   <td>{{ $jadwal->hari }}</td>
                   <td>{{ $jadwal->jam_mulai->format('H:i') }}</td>
                   <td>{{ $jadwal->jam_selesai->format('H:i') }}</td>
                   <td>
-                    @if($jadwal->aktif)
-                      <span class="badge badge-success">
-                        <i class="fas fa-check"></i> Aktif
-                      </span>
-                    @else
-                      <span class="badge badge-secondary">
-                        <i class="fas fa-times"></i> Tidak Aktif
-                      </span>
-                    @endif
+                    <span class="badge {{ $status['class'] }} status-badge" id="status-{{ $jadwal->id }}">
+                      <i class="{{ $status['icon'] }}"></i> <span class="status-text">{{ $status['label'] }}</span>
+                    </span>
                   </td>
                   <td>
-                    @if(!$jadwal->aktif)
-                      <form method="POST" action="{{ route('dokter.jadwal.activate', $jadwal->id) }}" style="display:inline">
-                        @csrf
-                        @method('PUT')
-                        <button type="submit" class="btn btn-sm btn-success" title="Aktifkan jadwal ini">
+                    <div class="btn-group" id="actions-{{ $jadwal->id }}">
+                      @if(!$jadwal->aktif)
+                        <button type="button" 
+                                class="btn btn-sm btn-success btn-activate"
+                                data-id="{{ $jadwal->id }}"
+                                data-hari="{{ $jadwal->hari }}"
+                                data-jam="{{ $jadwal->jam_mulai->format('H:i') }}-{{ $jadwal->jam_selesai->format('H:i') }}"
+                                title="Aktifkan jadwal ini">
                           <i class="fas fa-power-off"></i> Aktifkan
                         </button>
-                      </form>
-                    @endif
-                    
-                    @php
-                      $today = now()->locale('id')->dayName;
-                      $canEdit = $jadwal->hari !== $today;
-                    @endphp
-                    
-                    @if($canEdit)
-                      <button type="button" class="btn btn-sm btn-warning btn-edit"
-                              data-id="{{ $jadwal->id }}"
-                              data-hari="{{ $jadwal->hari }}"
-                              data-jam_mulai="{{ $jadwal->jam_mulai->format('H:i') }}"
-                              data-jam_selesai="{{ $jadwal->jam_selesai->format('H:i') }}"
-                              title="Edit jadwal">
-                        <i class="fas fa-edit"></i>
-                      </button>
-                    @else
-                      <span class="badge badge-warning" title="Tidak dapat diubah di hari H">
-                        <i class="fas fa-lock"></i> Terkunci
-                      </span>
-                    @endif
+                      @else
+                        <span class="badge badge-success">
+                          <i class="fas fa-check"></i> Jadwal Aktif
+                        </span>
+                      @endif
+                      
+                      @if($jadwal->canBeEdited())
+                        <button type="button" class="btn btn-sm btn-warning btn-edit"
+                                data-id="{{ $jadwal->id }}"
+                                data-hari="{{ $jadwal->hari }}"
+                                data-jam_mulai="{{ $jadwal->jam_mulai->format('H:i') }}"
+                                data-jam_selesai="{{ $jadwal->jam_selesai->format('H:i') }}"
+                                title="Edit jadwal">
+                          <i class="fas fa-edit"></i>
+                        </button>
+                      @else
+                        <span class="badge badge-warning" title="Tidak dapat diubah saat operasional">
+                          <i class="fas fa-lock"></i> Terkunci
+                        </span>
+                      @endif
+                    </div>
                   </td>
                 </tr>
                 @endforeach
               </tbody>
             </table>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ NEW: Modal Konfirmasi Aktivasi dengan Operational Warning -->
+  <div class="modal fade" id="activateModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header bg-success">
+          <h5 class="modal-title">Konfirmasi Aktivasi Jadwal</h5>
+          <button type="button" class="close" data-dismiss="modal">
+            <span>&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>Apakah Anda yakin ingin mengaktifkan jadwal?</p>
+          <div class="alert alert-info">
+            <strong>Jadwal yang akan diaktifkan:</strong><br>
+            <strong id="activate-schedule-info"></strong>
+          </div>
+          <div class="alert alert-warning" id="operational-alert" style="display: none;">
+            <i class="fas fa-exclamation-triangle"></i>
+            <strong>Peringatan:</strong> <span id="operational-message"></span>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+          <form id="activateForm" method="POST">
+            @csrf
+            @method('PUT')
+            <button type="submit" class="btn btn-success" id="confirm-activate">
+              <i class="fas fa-power-off"></i> Ya, Aktifkan
+            </button>
+          </form>
         </div>
       </div>
     </div>
@@ -208,11 +273,25 @@ $(function () {
     // Auto-close alerts after 5 seconds
     $("#success-alert, #error-alert").fadeTo(5000, 500).slideUp(500);
     
+    // ✅ Real-time Clock
+    function updateClock() {
+        const now = new Date();
+        const timeString = now.toLocaleTimeString('id-ID', {
+            timeZone: 'Asia/Jakarta',
+            hour12: false
+        });
+        $('#live-clock').text(timeString);
+    }
+    
+    updateClock();
+    setInterval(updateClock, 1000);
+    
     // DataTable inisialisasi
     $('#jadwalTable').DataTable({
       responsive: true,
       lengthChange: false,
       autoWidth: false,
+      order: [[1, 'asc']], // Sort by hari
       language: {
         search: "Cari:",
         lengthMenu: "Tampilkan _MENU_ data per halaman",
@@ -229,8 +308,114 @@ $(function () {
       }
     });
 
-    // Handler edit jadwal (event delegation)
+    // ✅ ENHANCED: Real-time Status Update
+    function updateScheduleStatus() {
+        $.ajax({
+            url: '/dokter/jadwal/status',
+            method: 'GET',
+            success: function(response) {
+                // Update setiap status jadwal
+                $.each(response.schedules, function(jadwalId, data) {
+                    const statusBadge = $('#status-' + jadwalId);
+                    const actionsDiv = $('#actions-' + jadwalId);
+                    
+                    // Update status badge
+                    statusBadge.removeClass().addClass('badge ' + data.class + ' status-badge');
+                    statusBadge.find('i').removeClass().addClass(data.icon);
+                    statusBadge.find('.status-text').text(data.label);
+                    
+                    // Update action buttons berdasarkan status
+                    updateActionButtons(jadwalId, data, response.is_currently_operational);
+                });
+                
+                // Update operational warning
+                if (response.is_currently_operational) {
+                    $('#operational-warning').show();
+                    $('#operational-status').show();
+                } else {
+                    $('#operational-warning').hide();
+                    $('#non-operational-status').show();
+                }
+            },
+            error: function() {
+                console.log('Error updating schedule status');
+            }
+        });
+    }
+    
+    function updateActionButtons(jadwalId, data, isCurrentlyOperational) {
+        const actionsDiv = $('#actions-' + jadwalId);
+        const activateBtn = actionsDiv.find('.btn-activate');
+        const editBtn = actionsDiv.find('.btn-edit');
+        
+        // Disable/enable buttons berdasarkan status
+        if (data.is_operational) {
+            // Jadwal sedang operasional - disable semua except yang active
+            activateBtn.prop('disabled', true).attr('title', 'Sedang operasional');
+            editBtn.prop('disabled', true).attr('title', 'Tidak dapat diedit saat operasional');
+        } else if (isCurrentlyOperational && !data.status.includes('active')) {
+            // Ada jadwal lain yang operasional - disable activate
+            activateBtn.prop('disabled', true).attr('title', 'Masih ada jadwal operasional lain');
+        } else {
+            // Normal state
+            activateBtn.prop('disabled', false).attr('title', 'Aktifkan jadwal ini');
+            if (data.can_be_edited) {
+                editBtn.prop('disabled', false).attr('title', 'Edit jadwal');
+            }
+        }
+    }
+    
+    // Update status setiap 30 detik
+    setInterval(updateScheduleStatus, 30000);
+    
+    // Manual refresh
+    $('#refresh-status').on('click', function() {
+        updateScheduleStatus();
+        $(this).find('i').addClass('fa-spin');
+        setTimeout(() => {
+            $(this).find('i').removeClass('fa-spin');
+        }, 1000);
+    });
+
+    // ✅ ENHANCED: Activate button dengan modal konfirmasi
+    $(document).on('click', '.btn-activate', function () {
+        if ($(this).prop('disabled')) {
+            return false;
+        }
+        
+        const id = $(this).data('id');
+        const hari = $(this).data('hari');
+        const jam = $(this).data('jam');
+        
+        $('#activate-schedule-info').text(hari + ' ' + jam);
+        $('#activateForm').attr('action', '/dokter/jadwal/' + id + '/activate');
+        
+        // Cek apakah ada peringatan operasional
+        $.ajax({
+            url: '/dokter/jadwal/status',
+            method: 'GET',
+            success: function(response) {
+                if (response.is_currently_operational) {
+                    $('#operational-alert').show();
+                    $('#operational-message').text('Anda masih dalam jam operasional. Aktivasi mungkin akan gagal.');
+                    $('#confirm-activate').removeClass('btn-success').addClass('btn-warning');
+                } else {
+                    $('#operational-alert').hide();
+                    $('#confirm-activate').removeClass('btn-warning').addClass('btn-success');
+                }
+                
+                $('#activateModal').modal('show');
+            }
+        });
+    });
+
+    // Handler edit jadwal (existing)
     $(document).on('click', '.btn-edit', function () {
+        if ($(this).prop('disabled')) {
+            alert('Jadwal tidak dapat diedit saat sedang operasional!');
+            return false;
+        }
+        
         $('#jadwal_id').val($(this).data('id'));
         $('#hari').val($(this).data('hari'));
         $('#jam_mulai').val($(this).data('jam_mulai'));
@@ -242,6 +427,11 @@ $(function () {
         $('#method').val('PUT');
         $('#jadwalForm').attr('action', '/dokter/jadwal/' + $(this).data('id'));
         $('#btnCancel').show();
+        
+        // Scroll to form
+        $('html, body').animate({
+            scrollTop: $("#jadwalForm").offset().top - 100
+        }, 500);
     });
 
     // Cancel edit
@@ -269,6 +459,9 @@ $(function () {
             $(this).val('');
         }
     });
+    
+    // ✅ Initial status update
+    updateScheduleStatus();
 });
 </script>
 @endsection

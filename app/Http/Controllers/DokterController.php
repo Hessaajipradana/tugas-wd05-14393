@@ -22,18 +22,25 @@ class DokterController extends Controller
     }
 
     /**
-     * Menampilkan dashboard dokter
+     * ✅ ENHANCED: Dashboard dokter dengan jadwal hari ini
      */
     public function dashboard()
     {
         $user = Auth::user();
         $dokterId = $user->entity_id;
         
+        // ✅ NEW: Ambil jadwal hari ini
+        $today = Carbon::now('Asia/Jakarta')->locale('id')->dayName;
+        $jadwalHariIni = JadwalPeriksa::where('id_dokter', $dokterId)
+                                    ->where('hari', $today)
+                                    ->where('aktif', true)
+                                    ->first();
+        
         // Mengambil data untuk statistik
         $pasien_count = DaftarPoli::whereHas('jadwal', function($q) use ($dokterId) {
                 $q->where('id_dokter', $dokterId);
             })
-            ->whereDate('tanggal_daftar', Carbon::today())
+            ->whereDate('tanggal_daftar', Carbon::today('Asia/Jakarta'))
             ->count();
             
         $obat_count = Obat::count();
@@ -46,57 +53,79 @@ class DokterController extends Controller
             ->whereNotNull('catatan')
             ->count();
         
-        return view('dokter.dashboard', compact('pasien_count', 'obat_count', 'total_pasien', 'total_periksa'));
+        // ✅ NEW: Data jadwal untuk dashboard
+        $jadwalData = null;
+        if ($jadwalHariIni) {
+            $status = $jadwalHariIni->getOperationalStatus();
+            $jadwalData = [
+                'jadwal' => $jadwalHariIni,
+                'status' => $status,
+                'is_operational' => $jadwalHariIni->isCurrentlyOperational(),
+                'remaining_minutes' => $jadwalHariIni->getRemainingOperationalMinutes(),
+                'current_time' => Carbon::now('Asia/Jakarta')->format('H:i')
+            ];
+        }
+        
+        return view('dokter.dashboard', compact(
+            'pasien_count', 
+            'obat_count', 
+            'total_pasien', 
+            'total_periksa',
+            'jadwalHariIni',
+            'jadwalData',
+            'today'
+        ));
     }
 
     /**
- * Menampilkan daftar pasien yang perlu diperiksa
- */
-public function periksa()
-{
-    $dokterId = Auth::user()->entity_id;
-    
-    // Mengambil daftar pasien yang perlu diperiksa (dari DaftarPoli)
-    $periksa_pasiens = DaftarPoli::whereHas('jadwal', function($q) use ($dokterId) {
-            $q->where('id_dokter', $dokterId);
-        })
-        ->where('status', 'menunggu')
-        ->with(['pasien', 'jadwal'])
-        ->orderBy('tanggal_daftar', 'asc')
-        ->orderBy('no_antrian', 'asc')
-        ->get();
-    
-    // Mengambil riwayat pemeriksaan yang sudah selesai
-    $riwayat_periksa = Periksa::whereHas('daftarPoli.jadwal', function($q) use ($dokterId) {
-            $q->where('id_dokter', $dokterId);
-        })
-        ->whereNotNull('catatan')
-        ->with(['daftarPoli.pasien', 'obat'])
-        ->orderBy('tgl_periksa', 'desc')
-        ->limit(10)
-        ->get();
-    
-    // Statistik untuk hari ini
-    $total_antrian_hari_ini = DaftarPoli::whereHas('jadwal', function($q) use ($dokterId) {
-            $q->where('id_dokter', $dokterId);
-        })
-        ->whereDate('tanggal_daftar', today())
-        ->count();
+     * Menampilkan daftar pasien yang perlu diperiksa
+     */
+    public function periksa()
+    {
+        $dokterId = Auth::user()->entity_id;
         
-    $total_selesai_hari_ini = DaftarPoli::whereHas('jadwal', function($q) use ($dokterId) {
-            $q->where('id_dokter', $dokterId);
-        })
-        ->where('status', 'selesai')
-        ->whereDate('tanggal_daftar', today())
-        ->count();
-    
-    return view('dokter.periksa', compact(
-        'periksa_pasiens', 
-        'riwayat_periksa',
-        'total_antrian_hari_ini',
-        'total_selesai_hari_ini'
-    ));
-}
+        // Mengambil daftar pasien yang perlu diperiksa (dari DaftarPoli)
+        $periksa_pasiens = DaftarPoli::whereHas('jadwal', function($q) use ($dokterId) {
+                $q->where('id_dokter', $dokterId);
+            })
+            ->where('status', 'menunggu')
+            ->with(['pasien', 'jadwal'])
+            ->orderBy('tanggal_daftar', 'asc')
+            ->orderBy('no_antrian', 'asc')
+            ->get();
+        
+        // Mengambil riwayat pemeriksaan yang sudah selesai
+        $riwayat_periksa = Periksa::whereHas('daftarPoli.jadwal', function($q) use ($dokterId) {
+                $q->where('id_dokter', $dokterId);
+            })
+            ->whereNotNull('catatan')
+            ->with(['daftarPoli.pasien', 'obat'])
+            ->orderBy('tgl_periksa', 'desc')
+            ->limit(10)
+            ->get();
+        
+        // Statistik untuk hari ini
+        $total_antrian_hari_ini = DaftarPoli::whereHas('jadwal', function($q) use ($dokterId) {
+                $q->where('id_dokter', $dokterId);
+            })
+            ->whereDate('tanggal_daftar', today())
+            ->count();
+            
+        $total_selesai_hari_ini = DaftarPoli::whereHas('jadwal', function($q) use ($dokterId) {
+                $q->where('id_dokter', $dokterId);
+            })
+            ->where('status', 'selesai')
+            ->whereDate('tanggal_daftar', today())
+            ->count();
+        
+        return view('dokter.periksa', compact(
+            'periksa_pasiens', 
+            'riwayat_periksa',
+            'total_antrian_hari_ini',
+            'total_selesai_hari_ini'
+        ));
+    }
+
     /**
      * Menampilkan form edit periksa
      */
@@ -203,7 +232,7 @@ public function periksa()
     }
 
     /**
-     * JADWAL PERIKSA MANAGEMENT
+     * ✅ ENHANCED: JADWAL PERIKSA MANAGEMENT dengan Operational Hours
      */
     public function jadwal()
     {
@@ -212,7 +241,15 @@ public function periksa()
                                 ->orderBy('hari')
                                 ->get();
         
-        return view('dokter.jadwal', compact('jadwals'));
+        // ✅ NEW: Cek status operasional dokter
+        $isCurrentlyOperational = JadwalPeriksa::isDoctorCurrentlyOperational($dokterId);
+        $currentOperationalSchedule = null;
+        
+        if ($isCurrentlyOperational) {
+            $currentOperationalSchedule = JadwalPeriksa::getCurrentOperationalSchedule($dokterId);
+        }
+        
+        return view('dokter.jadwal', compact('jadwals', 'isCurrentlyOperational', 'currentOperationalSchedule'));
     }
 
     public function jadwalStore(Request $request)
@@ -251,9 +288,13 @@ public function periksa()
                               ->where('id_dokter', Auth::user()->entity_id)
                               ->firstOrFail();
 
-        // Cek apakah hari ini
-        $today = now()->locale('id')->dayName;
-        if ($jadwal->hari === $today) {
+        // ✅ ENHANCED: Validasi dengan business logic yang lebih canggih
+        if (!$jadwal->canBeEdited()) {
+            if ($jadwal->isCurrentlyOperational()) {
+                $sisaWaktu = $jadwal->getRemainingOperationalMinutes();
+                return back()->with('error', "Tidak dapat mengubah jadwal saat sedang operasional! Sisa waktu: {$sisaWaktu} menit.");
+            }
+            
             return back()->with('error', 'Tidak boleh mengubah jadwal di hari H!');
         }
 
@@ -271,16 +312,56 @@ public function periksa()
         }
     }
 
+    // ✅ ENHANCED: Aktivasi jadwal dengan validasi operasional
     public function jadwalActivate($id)
     {
+        $dokterId = Auth::user()->entity_id;
+        
         $jadwal = JadwalPeriksa::where('id', $id)
-                              ->where('id_dokter', Auth::user()->entity_id)
+                              ->where('id_dokter', $dokterId)
                               ->firstOrFail();
         
-        $jadwal->setAsActive();
+        try {
+            // Validasi dilakukan di dalam setAsActive()
+            $jadwal->setAsActive();
+            
+            return redirect()->route('dokter.jadwal')
+                ->with('success', 'Jadwal berhasil diaktifkan!');
+                
+        } catch (\Exception $e) {
+            return redirect()->route('dokter.jadwal')
+                ->with('error', $e->getMessage());
+        }
+    }
+
+    // ✅ NEW: AJAX endpoint untuk real-time status check
+    public function jadwalStatus(Request $request)
+    {
+        $dokterId = Auth::user()->entity_id;
+        $jadwals = JadwalPeriksa::where('id_dokter', $dokterId)->get();
         
-        return redirect()->route('dokter.jadwal')
-            ->with('success', 'Jadwal berhasil diaktifkan!');
+        $statusData = [];
+        foreach ($jadwals as $jadwal) {
+            $status = $jadwal->getOperationalStatus();
+            $statusData[$jadwal->id] = [
+                'status' => $status['status'],
+                'label' => $status['label'],
+                'class' => $status['class'],
+                'icon' => $status['icon'],
+                'can_be_edited' => $jadwal->canBeEdited(),
+                'is_operational' => $jadwal->isCurrentlyOperational(),
+                'remaining_minutes' => $status['remaining_minutes'] ?? 0
+            ];
+        }
+        
+        $isCurrentlyOperational = JadwalPeriksa::isDoctorCurrentlyOperational($dokterId);
+        
+        return response()->json([
+            'schedules' => $statusData,
+            'is_currently_operational' => $isCurrentlyOperational,
+            'current_time' => Carbon::now('Asia/Jakarta')->format('H:i:s'),
+            'current_day' => Carbon::now('Asia/Jakarta')->locale('id')->dayName
+        ]);
     }
 
     /**

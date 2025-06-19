@@ -68,7 +68,8 @@ Route::prefix('dokter')->name('dokter.')->middleware(['auth', 'role:dokter'])->g
     Route::post('/jadwal', [DokterController::class, 'jadwalStore'])->name('jadwal.store');
     Route::put('/jadwal/{id}', [DokterController::class, 'jadwalUpdate'])->name('jadwal.update');
     Route::put('/jadwal/{id}/activate', [DokterController::class, 'jadwalActivate'])->name('jadwal.activate');
-    
+    Route::get('/jadwal/status', [DokterController::class, 'jadwalStatus'])->name('jadwal.status');
+
     // Periksa Pasien
     Route::get('/periksa', [DokterController::class, 'periksa'])->name('periksa');
     Route::get('/periksa/{daftarPoliId}/edit', [DokterController::class, 'periksaEdit'])->name('periksa.edit');
