@@ -96,8 +96,53 @@
         </div>
       </div>
 
-      <!-- Table List -->
+      <!-- User Story Admin Kelola Obat -->
       <div class="col-md-8">
+        <div class="card">
+          <div class="card-header bg-primary text-white">
+            <h5 class="card-title mb-0">User Story: Admin Kelola Obat</h5>
+          </div>
+          <div class="card-body">
+            <p class="mb-4">
+              Sebagai seorang <strong>Admin</strong>, saya ingin mengelola data obat meliputi:
+              <br />
+              <em>menambah data obat, mengubah data obat dan menghapus data obat,</em>
+              <br />
+              sehingga dapat memudahkan saya untuk mengelola data obat.
+            </p>
+
+            <table class="table table-bordered">
+              <thead class="table-light">
+                <tr>
+                  <th scope="col" style="width: 5%;">#</th>
+                  <th scope="col">Task</th>
+                  <th scope="col" style="width: 10%;">Selesai?</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">1</th>
+                  <td>Menambah data obat</td>
+                  <td>✅</td>
+                </tr>
+                <tr>
+                  <th scope="row">2</th>
+                  <td>Mengubah data obat</td>
+                  <td>✅</td>
+                </tr>
+                <tr>
+                  <th scope="row">3</th>
+                  <td>Menghapus data obat</td>
+                  <td>✅</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Table List -->
+      <div class="col-md-12">
         <div class="card">
           <div class="card-header">
             <h3 class="card-title">Daftar Obat</h3>

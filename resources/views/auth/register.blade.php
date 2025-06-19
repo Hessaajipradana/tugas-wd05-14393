@@ -55,6 +55,19 @@
           @enderror
         </div>
         <div class="input-group mb-3">
+          <input type="text" name="no_ktp" class="form-control @error('no_ktp') is-invalid @enderror" placeholder="Nomor KTP (16 digit)" value="{{ old('no_ktp') }}" required autocomplete="no_ktp" maxlength="16" minlength="16">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-id-card"></span>
+            </div>
+          </div>
+          @error('no_ktp')
+            <span class="invalid-feedback" role="alert">
+              <strong>{{ $message }}</strong>
+            </span>
+          @enderror
+        </div>
+        <div class="input-group mb-3">
           <input type="text" name="no_hp" class="form-control @error('no_hp') is-invalid @enderror" placeholder="Nomor HP" value="{{ old('no_hp') }}" required autocomplete="no_hp">
           <div class="input-group-append">
             <div class="input-group-text">

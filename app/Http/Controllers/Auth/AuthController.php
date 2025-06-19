@@ -1,5 +1,5 @@
 <?php
-// app/Http/Controllers/Auth/AuthController.php (UPDATED)
+// app/Http/Controllers/Auth/AuthController.php
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -65,6 +65,12 @@ class AuthController extends Controller
             'email' => 'required|string|email|max:50|unique:users',
             'password' => 'required|string|min:8|confirmed',
             'terms' => 'required',
+        ], [
+            'no_ktp.unique' => 'Nomor KTP ini sudah terdaftar dalam sistem.',
+            'email.unique' => 'Email ini sudah digunakan.',
+            'password.confirmed' => 'Konfirmasi password tidak cocok.',
+            'password.min' => 'Password minimal 8 karakter.',
+            'terms.required' => 'Anda harus menyetujui syarat dan ketentuan.'
         ]);
 
         if ($validator->fails()) {
@@ -94,11 +100,9 @@ class AuthController extends Controller
 
             DB::commit();
 
-            // Auto login setelah registrasi
-            Auth::login($user);
-
-            return redirect()->route('pasien.dashboard')
-                ->with('success', "Registrasi berhasil! No Rekam Medis Anda: {$pasien->no_rm}");
+            // Redirect ke login dengan pesan sukses
+            return redirect()->route('login')
+                ->with('success', "Registrasi berhasil! No Rekam Medis Anda: {$pasien->no_rm}. Silahkan login dengan akun yang telah Anda buat.");
                 
         } catch (\Exception $e) {
             DB::rollBack();

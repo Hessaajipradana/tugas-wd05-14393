@@ -91,15 +91,9 @@
       <div class="col-md-6">
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">Aktivitas Terbaru</h3>
+            <h3 class="card-title">Quick Actions</h3>
           </div>
           <div class="card-body">
-            <div class="alert alert-info">
-              <h5><i class="icon fas fa-info"></i> Selamat Datang!</h5>
-              <p>Anda login sebagai Administrator. Gunakan menu Master Data untuk mengelola data poliklinik.</p>
-            </div>
-            
-            <h6>Quick Actions:</h6>
             <div class="btn-group-vertical w-100">
               <a href="{{ route('admin.poli.index') }}" class="btn btn-outline-primary btn-sm">
                 <i class="fas fa-hospital"></i> Kelola Poliklinik
@@ -139,6 +133,59 @@
                 <span class="badge badge-success">Active</span>
               </dd>
             </dl>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header bg-primary text-white">
+            <h5 class="card-title mb-0">User Story: Login sebagai Admin - Dashboard</h5>
+          </div>
+          <div class="card-body">
+            <p class="mb-4">
+              Sebagai seorang <strong>Admin</strong>, saya ingin memiliki privilege untuk:
+              <br />
+              <em>data dokter, pasien, obat dan poli serta Dashboard untuk menampilkan jumlah poli, dokter, dan pasien.</em>
+              <br />
+              sehingga pekerjaan saya menjadi lebih mudah.
+            </p>
+
+            <table class="table table-bordered">
+              <thead class="table-light">
+                <tr>
+                  <th scope="col" style="width: 5%;">#</th>
+                  <th scope="col">Task</th>
+                  <th scope="col" style="width: 10%;">Selesai?</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">1</th>
+                  <td>Mengelola data dokter</td>
+                  <td>✅</td>
+                </tr>
+                <tr>
+                  <th scope="row">2</th>
+                  <td>Mengelola data pasien</td>
+                  <td>✅</td>
+                </tr>
+                <tr>
+                  <th scope="row">3</th>
+                  <td>Mengelola data obat</td>
+                  <td>✅</td>
+                </tr>
+                <tr>
+                  <th scope="row">4</th>
+                  <td>Mengelola data poli</td>
+                  <td>✅</td>
+                </tr>
+                <tr>
+                  <th scope="row">5</th>
+                  <td>Melihat statistik jumlah poli, dokter, dan pasien di dashboard</td>
+                  <td>✅</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>

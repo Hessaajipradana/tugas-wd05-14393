@@ -84,9 +84,53 @@
           </form>
         </div>
       </div>
+      <!-- User Story Admin Kelola Poli -->
+      <div class="col-md-8">
+        <div class="card">
+          <div class="card-header bg-primary text-white">
+            <h5 class="card-title mb-0">User Story: Admin Kelola Poli</h5>
+          </div>
+          <div class="card-body">
+            <p class="mb-4">
+              Sebagai seorang <strong>Admin</strong>, saya ingin mengelola data poli meliputi :
+              <br />
+              <em>menambah data poli, mengubah data poli dan menghapus data poli, </em>
+              <br />
+              sehingga dapat memudahkan saya untuk mengelola data poli.
+            </p>
+
+            <table class="table table-bordered">
+              <thead class="table-light">
+                <tr>
+                  <th scope="col" style="width: 5%;">#</th>
+                  <th scope="col">Task</th>
+                  <th scope="col" style="width: 10%;">Selesai?</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">1</th>
+                  <td>Menambah data Poli</td>
+                  <td>✅</td>
+                </tr>
+                <tr>
+                  <th scope="row">2</th>
+                  <td>Mengubah data Poli</td>
+                  <td>✅</td>
+                </tr>
+                <tr>
+                  <th scope="row">3</th>
+                  <td>Menghapus data Poli</td>
+                  <td>✅</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
 
       <!-- Table List -->
-      <div class="col-md-8">
+      <div class="col-md-12">
         <div class="card">
           <div class="card-header">
             <h3 class="card-title">Daftar Poliklinik</h3>

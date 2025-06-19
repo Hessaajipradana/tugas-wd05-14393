@@ -88,7 +88,7 @@
             <div class="tab-content">
               <!-- Edit Profil Tab -->
               <div class="active tab-pane" id="profile">
-                <form method="POST" action="{{ route('dokter.profil.update') }}">
+                <form id="profileForm" method="POST" action="{{ route('dokter.profil.update') }}">
                   @csrf
                   @method('PUT')
                   
@@ -158,7 +158,7 @@
 
               <!-- Ganti Password Tab -->
               <div class="tab-pane" id="password">
-                <form method="POST" action="{{ route('dokter.password.update') }}">
+                <form id="passwordForm" method="POST" action="{{ route('dokter.password.update') }}">
                   @csrf
                   @method('PUT')
                   
@@ -174,10 +174,10 @@
                   </div>
                   
                   <div class="form-group row">
-                    <label for="password" class="col-sm-3 col-form-label">Password Baru</label>
+                    <label for="new_password" class="col-sm-3 col-form-label">Password Baru</label>
                     <div class="col-sm-9">
                       <input type="password" class="form-control @error('password') is-invalid @enderror" 
-                             id="password" name="password" required minlength="8">
+                             id="new_password" name="password" required minlength="8">
                       @error('password')
                       <div class="invalid-feedback">{{ $message }}</div>
                       @enderror
@@ -186,17 +186,20 @@
                   </div>
                   
                   <div class="form-group row">
-                    <label for="password_confirmation" class="col-sm-3 col-form-label">Konfirmasi Password</label>
+                    <label for="new_password_confirmation" class="col-sm-3 col-form-label">Konfirmasi Password</label>
                     <div class="col-sm-9">
                       <input type="password" class="form-control" 
-                             id="password_confirmation" name="password_confirmation" required minlength="8">
+                             id="new_password_confirmation" name="password_confirmation" required minlength="8">
+                      <div class="invalid-feedback" id="password-mismatch-error" style="display: none;">
+                        Password tidak sama
+                      </div>
                       <small class="text-muted">Ulangi password baru</small>
                     </div>
                   </div>
                   
                   <div class="form-group row">
                     <div class="offset-sm-3 col-sm-9">
-                      <button type="submit" class="btn btn-warning">
+                      <button type="submit" class="btn btn-warning" id="passwordSubmitBtn">
                         <i class="fas fa-key"></i> Ganti Password
                       </button>
                     </div>
@@ -224,39 +227,60 @@ $(function () {
     // Auto-close alerts after 5 seconds
     $(".alert").fadeTo(5000, 500).slideUp(500);
     
-    // Password confirmation validation
-    $('#password_confirmation').on('keyup', function() {
-        var password = $('#password').val();
+    // Password confirmation validation - HANYA untuk form password
+    $('#new_password_confirmation').on('keyup blur', function() {
+        var password = $('#new_password').val();
         var confirmPassword = $(this).val();
+        var errorDiv = $('#password-mismatch-error');
+        var submitBtn = $('#passwordSubmitBtn');
         
-        if (password !== confirmPassword && confirmPassword.length > 0) {
-            $(this).removeClass('is-valid').addClass('is-invalid');
-            if (!$(this).next('.invalid-feedback').length) {
-                $(this).after('<div class="invalid-feedback">Password tidak sama</div>');
+        if (confirmPassword.length > 0) {
+            if (password !== confirmPassword) {
+                $(this).removeClass('is-valid').addClass('is-invalid');
+                errorDiv.show();
+                submitBtn.prop('disabled', true);
+            } else {
+                $(this).removeClass('is-invalid').addClass('is-valid');
+                errorDiv.hide();
+                submitBtn.prop('disabled', false);
             }
-        } else if (confirmPassword.length > 0) {
-            $(this).removeClass('is-invalid').addClass('is-valid');
-            $(this).next('.invalid-feedback').remove();
+        } else {
+            $(this).removeClass('is-valid is-invalid');
+            errorDiv.hide();
+            submitBtn.prop('disabled', false);
         }
     });
     
-    // Form validation before submit
-    $('form').on('submit', function(e) {
-        var form = $(this);
-        var isPasswordForm = form.attr('action').includes('password');
+    // Juga validasi ketika password baru diubah
+    $('#new_password').on('keyup blur', function() {
+        var confirmPassword = $('#new_password_confirmation').val();
+        if (confirmPassword.length > 0) {
+            $('#new_password_confirmation').trigger('keyup');
+        }
+    });
+    
+    // Form validation HANYA untuk password form saat submit
+    $('#passwordForm').on('submit', function(e) {
+        var password = $('#new_password').val();
+        var confirmPassword = $('#new_password_confirmation').val();
         
-        if (isPasswordForm) {
-            var password = $('#password').val();
-            var confirmPassword = $('#password_confirmation').val();
-            
-            if (password !== confirmPassword) {
-                e.preventDefault();
-                $('#password_confirmation').addClass('is-invalid');
-                if (!$('#password_confirmation').next('.invalid-feedback').length) {
-                    $('#password_confirmation').after('<div class="invalid-feedback">Password tidak sama</div>');
-                }
-                return false;
-            }
+        if (password !== confirmPassword) {
+            e.preventDefault();
+            $('#new_password_confirmation').addClass('is-invalid');
+            $('#password-mismatch-error').show();
+            $('#passwordSubmitBtn').prop('disabled', true);
+            return false;
+        }
+    });
+    
+    // Reset validation saat pindah tab
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        if ($(e.target).attr('href') === '#password') {
+            // Reset form password saat buka tab password
+            $('#passwordForm')[0].reset();
+            $('#new_password_confirmation').removeClass('is-valid is-invalid');
+            $('#password-mismatch-error').hide();
+            $('#passwordSubmitBtn').prop('disabled', false);
         }
     });
 });

@@ -79,60 +79,57 @@
           <img src="{{ asset('dist/img/user2-160x160.jpg') }}" class="img-circle elevation-2" alt="Admin Image">
         </div>
         <div class="info">
-          <a href="#" class="d-block">Administrator</a>
+          <a href="#" class="d-block">Admin-A11.2022.14393</a>
         </div>
       </div>
 
       <!-- Sidebar Menu -->
-      <nav class="mt-2">
-        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-          <!-- Dashboard -->
-          <li class="nav-item">
-            <a href="{{ route('admin.dashboard') }}" class="nav-link {{ Request::is('admin/dashboard') ? 'active' : '' }}">
-              <i class="nav-icon fas fa-tachometer-alt"></i>
-              <p>Dashboard</p>
-            </a>
-          </li>
-          
-          <!-- Master Data -->
-          <li class="nav-item {{ Request::is('admin/poli*') || Request::is('admin/dokter*') || Request::is('admin/pasien*') || Request::is('admin/obat*') ? 'menu-open' : '' }}">
-            <a href="#" class="nav-link {{ Request::is('admin/poli*') || Request::is('admin/dokter*') || Request::is('admin/pasien*') || Request::is('admin/obat*') ? 'active' : '' }}">
-              <i class="nav-icon fas fa-database"></i>
-              <p>
-                Master Data
-                <i class="right fas fa-angle-left"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="{{ route('admin.poli.index') }}" class="nav-link {{ Request::is('admin/poli*') ? 'active' : '' }}">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Poliklinik</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ route('admin.dokter.index') }}" class="nav-link {{ Request::is('admin/dokter*') ? 'active' : '' }}">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Dokter</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ route('admin.pasien.index') }}" class="nav-link {{ Request::is('admin/pasien*') ? 'active' : '' }}">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Pasien</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ route('admin.obat.index') }}" class="nav-link {{ Request::is('admin/obat*') ? 'active' : '' }}">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Obat</p>
-                </a>
-              </li>
-            </ul>
-          </li>
-        </ul>
-      </nav>
-      <!-- /.sidebar-menu -->
+<nav class="mt-2">
+  <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+    <!-- Dashboard -->
+    <li class="nav-item">
+      <a href="{{ route('admin.dashboard') }}" class="nav-link {{ Request::is('admin/dashboard') ? 'active' : '' }}">
+        <i class="nav-icon fas fa-tachometer-alt"></i>
+        <p>Dashboard</p>
+      </a>
+    </li>
+    
+    <!-- Master Data Section Header -->
+    <li class="nav-header">MASTER DATA</li>
+    
+    <!-- Poliklinik -->
+    <li class="nav-item">
+      <a href="{{ route('admin.poli.index') }}" class="nav-link {{ Request::is('admin/poli*') ? 'active' : '' }}">
+        <i class="nav-icon fas fa-clinic-medical"></i>
+        <p>Poliklinik</p>
+      </a>
+    </li>
+    
+    <!-- Dokter -->
+    <li class="nav-item">
+      <a href="{{ route('admin.dokter.index') }}" class="nav-link {{ Request::is('admin/dokter*') ? 'active' : '' }}">
+        <i class="nav-icon fas fa-user-md"></i>
+        <p>Dokter</p>
+      </a>
+    </li>
+    
+    <!-- Pasien -->
+    <li class="nav-item">
+      <a href="{{ route('admin.pasien.index') }}" class="nav-link {{ Request::is('admin/pasien*') ? 'active' : '' }}">
+        <i class="nav-icon fas fa-user-injured"></i>
+        <p>Pasien</p>
+      </a>
+    </li>
+    
+    <!-- Obat -->
+    <li class="nav-item">
+      <a href="{{ route('admin.obat.index') }}" class="nav-link {{ Request::is('admin/obat*') ? 'active' : '' }}">
+        <i class="nav-icon fas fa-pills"></i>
+        <p>Obat</p>
+      </a>
+    </li>
+  </ul>
+</nav>
     </div>
     <!-- /.sidebar -->
   </aside>

@@ -107,8 +107,54 @@
         </div>
       </div>
 
-      <!-- Table List -->
+
+      <!-- User Story Admin Kelola Pasien -->
       <div class="col-md-8">
+        <div class="card">
+          <div class="card-header bg-primary text-white">
+            <h5 class="card-title mb-0">User Story: Admin Kelola Pasien</h5>
+          </div>
+          <div class="card-body">
+            <p class="mb-4">
+              Sebagai seorang <strong>Admin</strong>, saya ingin memiliki akses untuk dapat:
+              <br />
+              <em>mengelola data pasien meliputi menambah (walaupun pasien dapat melakukan registrasi pasien), mengedit pasien dan menghapus pasien. </em>
+              <br />
+              sehingga dapat memudahkan saya untuk mengelola data pasien.
+            </p>
+
+            <table class="table table-bordered">
+              <thead class="table-light">
+                <tr>
+                  <th scope="col" style="width: 5%;">#</th>
+                  <th scope="col">Task</th>
+                  <th scope="col" style="width: 10%;">Selesai?</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">1</th>
+                  <td>Menambah data pasien</td>
+                  <td>✅</td>
+                </tr>
+                <tr>
+                  <th scope="row">2</th>
+                  <td>Mengubah data pasien</td>
+                  <td>✅</td>
+                </tr>
+                <tr>
+                  <th scope="row">3</th>
+                  <td>Menghapus data pasien</td>
+                  <td>✅</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Table List -->
+      <div class="col-md-12">
         <div class="card">
           <div class="card-header">
             <h3 class="card-title">Daftar Pasien</h3>
@@ -163,6 +209,7 @@
           </div>
         </div>
       </div>
+
     </div>
   </div>
 </section>
